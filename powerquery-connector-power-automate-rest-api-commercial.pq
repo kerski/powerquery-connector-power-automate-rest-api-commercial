@@ -250,7 +250,7 @@ POWERAUTOMATERESTAPIComm.Publish = [
     Beta = true,
     Category = "Other",
     ButtonText = { Extension.LoadString("ButtonTitle"), Extension.LoadString("ButtonHelp") },
-    LearnMoreUrl = "https://powerbi.microsoft.com/",
+    LearnMoreUrl = "https://github.com/kerski/powerquery-connector-power-automate-rest-api-commercial#readme",
     SourceImage = POWERAUTOMATERESTAPIComm.Icons,
     SourceTypeImage = POWERAUTOMATERESTAPIComm.Icons
 ];
