@@ -6,13 +6,18 @@ Each function returns a JSON body and not a table of data.  This decision was ma
 
 ## Table of Contents
 
-1. [Installation](#installation)
-    1. [Desktop](#desktop)
-    1. [Using Functions](#using-functions)
-    1. [Functions Implemented](#functions-implemented)
-    1. [On-Premises Gateway](#on-premises-gateway)
-1. [Building Connector](#building-connector)
-    1. [Testing Connector](#testing-connector)
+- [Power Query Custom Data Connector for Power Automate REST APIs (Commercial)](#power-query-custom-data-connector-for-power-automate-rest-apis-commercial)
+  - [Table of Contents](#table-of-contents)
+  - [Installation](#installation)
+    - [Desktop](#desktop)
+    - [Using Functions](#using-functions)
+    - [Functions Implemented](#functions-implemented)
+    - [Apps](#apps)
+    - [On-Premises Gateway](#on-premises-gateway)
+  - [Building Connector](#building-connector)
+    - [Prerequisites](#prerequisites)
+  - [Compile](#compile)
+    - [Testing Connector](#testing-connector)
 
 
 ## Installation
@@ -88,6 +93,7 @@ Not all functions from the Power Automate REST API have been implemented.  Here 
 | Get Environments | Returns the environments available to the requestor. IsDefault parameter identifies the default environment (true value).  |
 | Get Personal Flows | Returns the Personal flows (shown as Cloud Flows in the Power Automate interface) for a specific environment.  |
 | Get Team Flows | Returns the Team flows (shown as Shared With Me in the Power Automate interface) for a specific environment.  |
+| Get Flow | Returns the flow's specific details including triggers, steps, and connections.  |
 | Get Flow Runs | Returns the flow runs for a specific Flow ID.  If no parameters are supplied it will retrieve the latest 50 runs.  |
 
 ### On-Premises Gateway

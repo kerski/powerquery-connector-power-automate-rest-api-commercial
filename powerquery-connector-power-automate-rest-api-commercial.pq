@@ -1,4 +1,4 @@
-﻿[Version = "1.0.0"]
+﻿[Version = "1.0.1"]
 section POWERAUTOMATERESTAPIComm;
 
 [DataSource.Kind="POWERAUTOMATERESTAPIComm", Publish="POWERAUTOMATERESTAPIComm.Publish"]
@@ -10,6 +10,7 @@ let
             {"GetEnvironments","GetEnvironments",POWERAUTOMATERESTAPIComm.GetEnvironments,"Function","GetEnvironments",true},
             {"GetPersonalFlows","GetPersonalFlows",POWERAUTOMATERESTAPIComm.GetPersonalFlows,"Function","GetPersonalFlows",true},
             {"GetTeamFlows","GetTeamFlows",POWERAUTOMATERESTAPIComm.GetTeamFlows,"Function","GetTeamFlows",true},
+            {"GetFlow","GetFlow",POWERAUTOMATERESTAPIComm.GetFlow,"Function","GetFlow",true},
             {"GetFlowRuns","GetFlowRuns",POWERAUTOMATERESTAPIComm.GetFlowRuns,"Function","GetFlowRuns",true}
         }),
     navTable = Table.ForceToNavigationTable(objects,{"Key"},"Name","Data","ItemKind","ItemName","IsLeaf")
@@ -158,6 +159,54 @@ GetTeamFlows = (optional EnvId as text, optional Parameters as text) =>
     in
         result; 
 
+/***************** 
+GetFlow
+
+URL: {API ENDPOINT}/providers/Microsoft.ProcessSimple/environments/{EnvironmentId}/flows/{FlowId}?api-version=2016-11-01
+
+Input:
+    EnvironmentId
+    FlowId
+*****************/
+shared POWERAUTOMATERESTAPIComm.GetFlow = Value.ReplaceType(
+    GetFlow,
+    GetFlowType
+);
+
+GetFlowType = type function ( 
+    optional EnvId as ( 
+        type text meta [
+            Documentation. FieldCaption = "Environment ID",
+            Documentation. FieldDescription = "The Environment ID for the Flow", 
+            Documentation. SampleValues = { "xxx-xxxx-yyxa..."
+            }
+        ]
+    ),
+    optional FlowId as ( 
+        type text meta [
+            Documentation.FieldCaption = "Flow ID",
+            Documentation.FieldDescription = "The Flow's ID",
+            Documentation.SampleValues = {
+                "xxx-xxxx-yyxa ... "
+            }
+        ]
+    )
+) as table meta [
+    Documentation.Name = "POWERAUTOMATERESTAPIComm.GetFlow",
+    Documentation. LongDescription = "Returns the flow's specific details including triggers, steps, and connections.",
+    Documentation.Examples = { 
+        [
+            Code = "=POWERAUTOMATERESTAPIComm.GetFlow(""xxx-xxxx-yyxa ... "")",
+            Result = "API call to Power Automate which returns a JSON result for the flow specified by Flow ID and Environment ID."
+        ]
+    }
+];
+
+GetFlow = (optional EnvId as text, optional FlowId as text) => 
+    let
+        result = GetJSON("/providers/Microsoft.ProcessSimple/environments/" & EnvId & "/flows/" & FlowId & "?api-version=" & API_VERSION & "&$expand=swagger,properties.connectionreferences.apidefinition,properties.definitionSummary.operations.apiOperation,operationDefinition,plan,properties.throttleData,properties.estimatedsuspensiondata")
+    in
+        result;  
 
 /***************** 
 GetFlowRuns

@@ -20,14 +20,16 @@ shared MyExtension.UnitTest =
     GetEnvironments = _GetFunction("GetEnvironments"),
     GetPersonalFlows = _GetFunction("GetPersonalFlows"),
     GetTeamFlows = _GetFunction("GetTeamFlows"),
+    GetFlow = _GetFunction("GetFlow"),
     GetFlowRuns = _GetFunction("GetFlowRuns"),
 
     // Variables 
     // Note: Assumes multiple flows
     FirstPersonalFlow = Json.Document(GetPersonalFlows(EnvId))[value]{0}[name],
     FirstPersonalFlowNull = Json.Document(GetPersonalFlows(EnvId,null))[value]{0}[name],
-    SecondPersonalFlow = Json.Document(GetPersonalFlows(EnvId,"$skip=2&$top=1"))[value]{0}[name],
+    SecondPersonalFlow = Json.Document(GetPersonalFlows(EnvId,"$top=2"))[value]{1}[name],
     DoesFirstMatchSecond = if FirstPersonalFlow = SecondPersonalFlow then true else false,
+    FlowInformation = Json.Document(GetFlow(EnvId,FlowId)),
 
     // Fact(<Name of the Test>, <Expected Value>, <Actual Value>)
     // <Expected Value> and <Actual Value> can be a literal or let statement
@@ -63,7 +65,16 @@ shared MyExtension.UnitTest =
         Fact("GetTeamFlows Should Be a Function",
             true,
             Value.Is(GetTeamFlows,Function.Type)
-        ),              
+        ),   
+        /* GetFlow */
+        Fact("GetFlow Should Be a Function",
+            true,
+            Value.Is(GetFlow,Function.Type)
+        ), 
+        Fact("GetFlow Should Provide Information About the Flow Id Provided",
+            FlowId,
+            FlowInformation[name]
+        ),                           
         /* GetFlowRuns */
         Fact("GetFlowRuns Should Be a Function",
             true,
