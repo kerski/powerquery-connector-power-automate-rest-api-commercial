@@ -1,4 +1,4 @@
-﻿[Version = "1.0.1"]
+﻿[Version = "1.0.2"]
 section POWERAUTOMATERESTAPIComm;
 
 [DataSource.Kind="POWERAUTOMATERESTAPIComm", Publish="POWERAUTOMATERESTAPIComm.Publish"]
@@ -239,10 +239,19 @@ GetFlowRunsType = type function (
                 "xxx-xxxx-yyxa ... "
             }
         ]
-    )
+    ),
+    optional SkipToken as ( 
+        type text meta [
+            Documentation.FieldCaption = "Skip Token",
+            Documentation.FieldDescription = "Used to get next set of flows run.",
+            Documentation.SampleValues = {
+                "eyqdfakwek... "
+            }
+        ]
+    )    
 ) as table meta [
     Documentation.Name = "POWERAUTOMATERESTAPIComm.GetFlowRuns",
-    Documentation. LongDescription = "Returns the flow runs for a specific Flow ID.  If no parameters are supplied it will retrieve the latest 50 runs.",
+    Documentation. LongDescription = "Returns the flow runs for a specific Flow ID.",
     Documentation.Examples = { 
         [
             Code = "=POWERAUTOMATERESTAPIComm.GetFlowRuns(""xxx-xxxx-yyxa ... "")",
@@ -251,9 +260,12 @@ GetFlowRunsType = type function (
     }
 ];
 
-GetFlowRuns = (optional EnvId as text, optional FlowId as text) => 
+GetFlowRuns = (optional EnvId as text, optional FlowId as text, optional SkipToken as text) => 
     let
-        result = GetJSON("/providers/Microsoft.ProcessSimple/environments/" & EnvId & "/flows/" & FlowId & "/runs?api-version=" & API_VERSION)
+        // Check to see if SkipToken is required
+        baseURL = "/providers/Microsoft.ProcessSimple/environments/" & EnvId & "/flows/" & FlowId & "/runs?api-version=" & API_VERSION,
+        flowRunsURL = if SkipToken = null or Text.Length(Text.Trim(Text.Clean(SkipToken))) = 0 then baseURL else baseURL & "&$skiptoken=" & SkipToken,
+        result = GetJSON(flowRunsURL)
     in
         result;        
 
